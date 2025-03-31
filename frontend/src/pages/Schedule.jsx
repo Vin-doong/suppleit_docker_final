@@ -638,9 +638,6 @@ const Schedule = () => {
             <div className="flex justify-between items-center mb-4">
               <h2 className="text-xl font-semibold text-gray-900">복용 캘린더</h2>
               <div className="flex space-x-2">
-                <button className="px-4 py-2 rounded-md bg-gray-200 text-gray-700">오늘</button>
-                <button className="px-4 py-2 rounded-md bg-gray-200 text-gray-700">이전</button>
-                <button className="px-4 py-2 rounded-md bg-gray-200 text-gray-700">다음</button>
               </div>
             </div>
             

@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.suppleit.backend.mapper.FavoriteMapper">
+    <resultMap id="favoriteResultMap" type="com.suppleit.backend.model.Favorite">
+        <id property="favoriteId" column="favorite_id"/>
+        <result property="memberId" column="member_id"/>
+        <result property="prdId" column="prd_id"/>
+    </resultMap>
+
+    <!-- 특정 사용자의 즐겨찾기 목록 조회 -->
+    <select id="getFavoritesByMemberId" resultMap="favoriteResultMap">
+        SELECT * FROM favorite WHERE member_id = #{memberId}
+    </select>
+    
+    <!-- 특정 사용자와 제품의 즐겨찾기 정보 조회 -->
+    <select id="getFavoriteByMemberAndProduct" resultMap="favoriteResultMap">
+        SELECT * FROM favorite 
+        WHERE member_id = #{memberId} AND prd_id = #{prdId}
+    </select>
+    
+    <!-- 즐겨찾기 추가 -->
+    <insert id="insertFavorite" useGeneratedKeys="true" keyProperty="favoriteId">
+        INSERT INTO favorite (member_id, prd_id)
+        VALUES (#{memberId}, #{prdId})
+    </insert>
+    
+    <!-- 즐겨찾기 삭제 -->
+    <delete id="deleteFavorite">
+        DELETE FROM favorite 
+        WHERE member_id = #{memberId} AND prd_id = #{prdId}
+    </delete>
+</mapper>

@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.suppleit.backend.mapper.NoticeMapper">
+
+    <!-- Notice 테이블의 content 컬럼 타입을 LONGTEXT로 변경하는 쿼리
+         실행하기 전에 데이터베이스에서 직접 실행해야 함
+    ALTER TABLE Notice MODIFY content LONGTEXT; -->
+
+    <!-- 공지사항 전체 조회 - 조회수와 작성일 추가 + 작성자 JOIN -->
+    <select id="getAllNotices" resultType="com.suppleit.backend.dto.NoticeDto">
+        SELECT 
+            n.notice_id AS noticeId, 
+            n.title, 
+            LEFT(n.content, 500) AS content,
+            n.views,
+            n.created_at AS createdAt,
+            n.updated_at AS updatedAt,
+            n.member_id AS memberId,
+            '관리자' AS authorName,  <!-- 닉네임을 '관리자'로 고정 -->
+            n.image_path AS imagePath,
+            n.attachment_path AS attachmentPath,
+            n.attachment_name AS attachmentName
+        FROM notice n
+        ORDER BY n.notice_id DESC
+    </select>
+
+    <!-- 특정 공지사항 조회 - 조회수 증가 및 작성자/수정자 정보 추가 -->
+    <select id="getNoticeById" resultType="com.suppleit.backend.dto.NoticeDto">
+        SELECT 
+            n.notice_id AS noticeId, 
+            n.title, 
+            n.content, 
+            n.views,
+            n.created_at AS createdAt,
+            n.updated_at AS updatedAt,
+            n.member_id AS memberId,
+            '관리자' AS authorName,  <!-- 닉네임을 '관리자'로 고정 -->
+            n.last_modified_by AS lastModifiedBy,
+            '관리자' AS modifierName,  <!-- 수정자 이름도 '관리자'로 고정 -->
+            n.image_path AS imagePath,
+            n.attachment_path AS attachmentPath,
+            n.attachment_name AS attachmentName
+        FROM notice n
+        WHERE n.notice_id = #{noticeId}
+    </select>
+
+    <!-- 조회수 증가 -->
+    <update id="incrementViews">
+        UPDATE notice 
+        SET views = COALESCE(views, 0) + 1 
+        WHERE notice_id = #{noticeId}
+    </update>
+
+    <!-- 공지사항 등록 -->
+    <insert id="insertNotice" useGeneratedKeys="true" keyProperty="noticeId">
+        INSERT INTO notice (
+            title, 
+            content, 
+            member_id, 
+            image_path, 
+            attachment_path, 
+            attachment_name,
+            views,
+            created_at
+        ) VALUES (
+            #{title}, 
+            #{content}, 
+            #{memberId}, 
+            #{imagePath}, 
+            #{attachmentPath}, 
+            #{attachmentName},
+            0,
+            NOW()
+        )
+    </insert>
+
+    <!-- 공지사항 수정 - content 컬럼 길이 제한 관련 수정 -->
+    <update id="updateNotice">
+        UPDATE notice 
+        SET 
+            title = #{notice.title}, 
+            content = #{notice.content},
+            last_modified_by = #{notice.lastModifiedBy},
+            updated_at = NOW()
+            <if test="notice.imagePath != null">
+            , image_path = #{notice.imagePath}
+            </if>
+            <if test="notice.imagePath == null">
+            , image_path = NULL
+            </if>
+            <if test="notice.attachmentPath != null">
+            , attachment_path = #{notice.attachmentPath}
+            , attachment_name = #{notice.attachmentName}
+            </if>
+            <if test="notice.attachmentPath == null">
+            , attachment_path = NULL
+            , attachment_name = NULL
+            </if>
+        WHERE notice_id = #{noticeId}
+    </update>
+
+    <!-- 공지사항 삭제 -->
+    <delete id="deleteNotice">
+        DELETE FROM notice WHERE notice_id = #{noticeId}
+    </delete>
+
+</mapper>

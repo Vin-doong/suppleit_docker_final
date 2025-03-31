@@ -1,0 +1,187 @@
+/* 글씨 애니메이션 */
+.sidebar-text {
+    transition: opacity 0.3s ease, visibility 0s 0.3s;
+}
+  
+.sidebar-hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+  
+.sidebar-visible {
+    opacity: 1;
+    visibility: visible;
+}
+  
+/* 캘린더 스타일 */
+.react-calendar {
+    font-family: 'Noto Sans KR', sans-serif;
+    background: white;
+    border: 1px solid #a0a0a0;
+    line-height: 1.125em;
+}
+  
+.react-calendar__tile {
+    max-width: 100%;
+    padding: 10px 6.6667px;
+    background: none;
+    text-align: center;
+    line-height: 16px;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+}
+  
+.react-calendar__tile--now {
+    background: #f0f8ff;
+    color: #3182ce;
+}
+  
+.react-calendar__tile:enabled:hover,
+.react-calendar__tile:enabled:focus {
+    background-color: #e6f2ff;
+}
+  
+.react-calendar__tile--active {
+    background: #3182ce !important;
+    color: white !important;
+}
+  
+/* Big Calendar 스타일 */
+.rbc-event {
+    background-color: #209696;
+    color: white;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+}
+  
+.rbc-event:hover {
+    background-color: #1a8c8c;
+}
+  
+.rbc-day-bg {
+    background-color: #f0f8ff;
+}
+  
+.rbc-today {
+    background-color: #e0f7fa;
+}
+  
+.rbc-time-slot {
+    border-left: 2px solid #209696;
+}
+  
+.rbc-header {
+    background-color: #f0f8ff;
+    padding: 8px 0;
+    font-weight: bold;
+}
+  
+.rbc-button-link {
+    color: #333;
+}
+  
+.rbc-button-link:hover {
+    color: #209696;
+}
+  
+.rbc-off-range-bg {
+    background-color: #f8f9fa;
+}
+  
+.rbc-toolbar button {
+    color: #209696;
+    border-color: #209696;
+}
+  
+.rbc-toolbar button:hover {
+    background-color: #e0f7fa;
+}
+  
+.rbc-toolbar button.rbc-active {
+    background-color: #209696;
+    color: white;
+}
+  
+/* 상태별 배경색 */
+.bg-green-200 {
+    background-color: #c6f6d5;
+}
+  
+.bg-red-200 {
+    background-color: #feb2b2;
+}
+  
+.bg-gray-200 {
+    background-color: #e2e8f0;
+}
+  
+/* 모달 애니메이션 */
+.modal-enter {
+    opacity: 0;
+    transform: scale(0.9);
+}
+  
+.modal-enter-active {
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 300ms, transform 300ms;
+}
+  
+.modal-exit {
+    opacity: 1;
+}
+  
+.modal-exit-active {
+    opacity: 0;
+    transform: scale(0.9);
+    transition: opacity 300ms, transform 300ms;
+}
+  
+/* 사이드바 스타일 */
+.sidebar {
+    transition: transform 0.3s ease-in-out;
+}
+  
+.sidebar-open {
+    transform: translateX(0);
+}
+  
+.sidebar-closed {
+    transform: translateX(-100%);
+}
+  
+/* 시간대 카드 스타일 */
+.time-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+  
+.time-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+/* 시간대별 배경색 */
+.morning-event {
+    background-color: #4299e1 !important; /* 파란색(아침) */
+    color: white !important;
+  }
+  
+  .afternoon-event {
+    background-color: #ed8936 !important; /* 주황색(점심) */
+    color: white !important;
+  }
+  
+  .evening-event {
+    background-color: #434190 !important; /* 남색(저녁) */
+    color: white !important;
+  }
+  
+  /* 기타 필요한 스타일 */
+  .purple-event {
+    background-color: #805ad5 !important; /* 123123 복용 */
+    color: white !important;
+  }
+  
+  /* 이벤트 글자 색상 */
+  .rbc-event {
+    color: white !important;
+  }

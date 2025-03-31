@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.suppleit.backend.mapper.ReviewMapper">
+
+    <!-- 리뷰 등록 -->
+    <insert id="insertReview" useGeneratedKeys="true" keyProperty="reviewId">
+        INSERT INTO review (
+        member_id, prd_id, product_name, title, content, rating, views, like_count, dislike_count, is_commentable, created_at
+        ) VALUES (
+        #{memberId}, #{prdId}, #{productName}, #{title}, #{content}, #{rating} ,0, 0, 0, #{isCommentable}, NOW()
+        )
+    </insert>
+
+    <!-- 리뷰 상세 조회 -->
+    <select id="getReviewById" resultType="com.suppleit.backend.model.Review">
+        SELECT
+            r.review_id AS reviewId,
+            r.member_id AS memberId,
+            r.title AS title,
+            r.content AS content,
+            r.views AS views,
+            r.rating AS rating,
+            r.like_count AS likeCount,
+            r.dislike_count AS dislikeCount,
+            r.is_commentable AS isCommentable,
+            r.created_at AS createdAt,
+            r.updated_at AS updatedAt,
+            r.prd_id AS prdId, 
+            r.product_name AS productName,
+            m.email AS authorEmail
+        FROM review r
+        LEFT JOIN product p ON r.prd_id = p.prd_id
+        LEFT JOIN member m ON r.member_id = m.member_id
+        WHERE r.review_id = #{reviewId}
+    </select>
+
+    <!-- 모든 리뷰 조회 (최신순) -->
+    <select id="getAllReviews" resultType="com.suppleit.backend.model.Review">
+        SELECT
+            r.review_id AS reviewId,
+            r.member_id AS memberId,
+            r.title AS title,
+            r.content AS content,
+            r.views AS views,
+            r.like_count AS likeCount,
+            r.dislike_count AS dislikeCount,
+            r.is_commentable AS isCommentable,
+            r.created_at AS createdAt,
+            r.updated_at AS updatedAt,
+            p.product_name AS productName,
+            m.email AS authorEmail
+        FROM review r
+        LEFT JOIN product p ON r.prd_id = p.prd_id
+        LEFT JOIN member m ON r.member_id = m.member_id
+        ORDER BY r.created_at DESC;
+    </select>
+
+    <!-- 리뷰 수정 -->
+    <update id="updateReview">
+        UPDATE review
+        SET 
+            title = #{title}, 
+            content = #{content},
+            product_name = #{productName},
+            rating = #{rating},
+            prd_id = #{prdId},
+            updated_at = NOW()
+        WHERE review_id = #{reviewId}
+    </update>
+
+    <!-- 리뷰 삭제 -->
+    <delete id="deleteReview">
+        DELETE FROM review WHERE review_id = #{reviewId}
+    </delete>
+
+    <!-- 조회수 증가 -->
+    <update id="incrementViews">
+        UPDATE review 
+        SET views = views + 1 
+        WHERE review_id = #{reviewId}
+    </update>
+
+    <!-- 상품 조회 -->
+    <select id="searchProducts" resultType="com.suppleit.backend.model.Product">
+        SELECT 
+            prd_id AS prdId, 
+            product_name AS productName, 
+            company_name AS companyName
+        FROM product
+        WHERE product_name LIKE CONCAT('%', #{keyword}, '%')
+        LIMIT 10
+    </select>
+
+</mapper>

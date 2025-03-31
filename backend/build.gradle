@@ -1,0 +1,106 @@
+plugins {
+    id 'java'
+    id 'org.springframework.boot' version '3.4.3'
+    id 'io.spring.dependency-management' version '1.1.7'
+}
+
+group = 'com.suppleit'
+version = '0.0.1-SNAPSHOT'
+
+java {
+    toolchain {
+        languageVersion = JavaLanguageVersion.of(21)
+    }
+}
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    /* ==============================
+       Spring Boot & Security
+       ============================== */
+    implementation 'org.springframework.boot:spring-boot-starter-web'            // 웹 애플리케이션 개발
+    implementation 'org.springframework.boot:spring-boot-starter-security'       // Spring Security 적용
+    implementation 'org.springframework.boot:spring-boot-starter-validation'     // @Valid 등 데이터 검증 기능
+    // ↓ OAuth2 인증 서버 (Spring Authorization Server)
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-authorization-server' // 필요 시 사용
+    // ↓ OAuth2 클라이언트 (소셜 로그인, 외부 OAuth2 리소스 접근)
+    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client'  // 필요 시 사용
+    implementation 'org.springframework.security:spring-security-oauth2-client'
+    implementation 'org.springframework.security:spring-security-oauth2-jose'
+
+    /* ==============================
+       Database & ORM
+       ============================== */
+    // ↓ MyBatis 사용
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:3.0.4'
+
+    // ↓ JPA(Hibernate) 사용 - MyBatis와 함께 쓰는 것은 가능하지만, 보통은 둘 중 하나만 사용
+    //implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+
+    // MySQL 연결 라이브러리
+    runtimeOnly 'com.mysql:mysql-connector-j'
+
+    /* ==============================
+       JWT (토큰 기반 인증)
+       ============================== */
+    // 방법1) 단일 jjwt 의존성
+    //implementation 'io.jsonwebtoken:jjwt:0.11.5'
+
+    
+    //방법2) 세분화된 의존성 (권장):
+    implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5'
+    runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.11.5'
+    //단, 하나만 택해서 써야 합니다. (둘 다 동시에 쓰면 중복)
+    
+    // 이메일
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+
+    /* ==============================
+       Redis (캐시, 세션 저장소 등)
+       ============================== */    
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+
+    // LocalDate 직렬화를 위한 Jackson 모듈 추가
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+    /* ==============================
+       Lombok (코드 간소화)
+       ============================== */
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    // LocaDateTime, LocalDate 등을 사용하기 위한 Jackson 모듈
+    implementation 'com.fasterxml.jackson.datatype:jackson-datatype-jsr310'
+
+    /* ==============================
+       개발 편의성 도구
+       ============================== */
+    // ↓ 개발 시 자동 리스타트, 코드 변경 감지 (배포 시에는 제거하는 경우도 있음)
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+
+    /* ==============================
+       테스트 라이브러리
+       ============================== */
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'       // JUnit5 + 스프링 테스트
+    testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:3.0.4' // MyBatis 테스트 지원
+    testImplementation 'org.springframework.security:spring-security-test'       // Spring Security 테스트
+    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'                 // JUnit 실행기
+}
+
+tasks.withType(JavaCompile) {
+    options.compilerArgs << "-parameters"
+} 
+
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

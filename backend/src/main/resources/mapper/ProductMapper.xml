@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.suppleit.backend.mapper.ProductMapper">
+    <resultMap id="productResultMap" type="com.suppleit.backend.model.Product">
+        <id property="prdId" column="prd_id"/>
+        <result property="productName" column="product_name"/>
+        <result property="companyName" column="company_name"/>
+        <result property="registrationNo" column="registration_no"/>
+        <result property="expirationPeriod" column="expiration_period"/>
+        <result property="srvUse" column="srv_use"/>
+        <result property="mainFunction" column="main_function"/>
+        <result property="preservation" column="preservation"/>
+        <result property="intakeHint" column="intake_hint"/>
+        <result property="baseStandard" column="base_standard"/>
+    </resultMap>
+
+    <!-- 제품 개수 조회 (추가) -->
+    <select id="getProductCount" resultType="long">
+        SELECT COUNT(*) FROM product
+    </select>
+
+    <!-- 제품 ID로 조회 -->
+    <select id="getProductById" resultMap="productResultMap">
+        SELECT * FROM product WHERE prd_id = #{prdId}
+    </select>
+    
+    <!-- 제품명으로 검색 (최적화) -->
+    <select id="searchProducts" resultMap="productResultMap">
+        SELECT * FROM product 
+        WHERE product_name LIKE CONCAT('%', #{keyword}, '%')
+        OR company_name LIKE CONCAT('%', #{keyword}, '%')
+        OR main_function LIKE CONCAT('%', #{keyword}, '%')
+        ORDER BY 
+            CASE 
+                WHEN product_name = #{keyword} THEN 0
+                WHEN product_name LIKE CONCAT(#{keyword}, '%') THEN 1
+                WHEN product_name LIKE CONCAT('%', #{keyword}, '%') THEN 2
+                WHEN company_name LIKE CONCAT('%', #{keyword}, '%') THEN 3
+                WHEN main_function LIKE CONCAT('%', #{keyword}, '%') THEN 4
+                ELSE 5
+            END,
+            product_name
+        LIMIT 20
+    </select>
+    
+    <!-- 제품 추가 기능 구현 예정--> 
+    <!-- <insert id="insertProduct">
+        INSERT INTO product (
+            prd_id, product_name, company_name, registration_no, 
+            expiration_period, srv_use, main_function, preservation, 
+            intake_hint, base_standard
+        ) VALUES (
+            #{prdId}, #{productName}, #{companyName}, #{registrationNo}, 
+            #{expirationPeriod}, #{srvUse}, #{mainFunction}, #{preservation}, 
+            #{intakeHint}, #{baseStandard}
+        )
+        ON DUPLICATE KEY UPDATE
+            product_name = #{productName},
+            company_name = #{companyName}
+    </insert> -->
+    
+    <!-- 제품 정보 업데이트 -->
+    <update id="updateProduct">
+        UPDATE product SET
+            product_name = #{productName},
+            company_name = #{companyName},
+            registration_no = #{registrationNo},
+            expiration_period = #{expirationPeriod},
+            srv_use = #{srvUse},
+            main_function = #{mainFunction},
+            preservation = #{preservation},
+            intake_hint = #{intakeHint},
+            base_standard = #{baseStandard}
+        WHERE prd_id = #{prdId}
+    </update>
+</mapper>

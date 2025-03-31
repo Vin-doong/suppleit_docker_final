@@ -1,0 +1,163 @@
+/* 전체 화면 스타일 */
+.home-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f5f5f5;
+  font-family: "Arial", sans-serif;
+ }
+ 
+ /* 🔹 네비게이션 바 스타일 */
+ .navbar {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: white;
+  padding: 15px 30px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1000;
+ }
+ 
+ /* 🔹 왼쪽: 로고 및 사이트명 */
+ .logo-container {
+  display: flex;
+  align-items: center;
+ }
+ 
+ .logo {
+  width: 40px; /* 로고 크기 */
+  height: 40px;
+  margin-right: 10px;
+ }
+ 
+ .site-name {
+  font-size: 22px;
+  font-weight: bold;
+  color: #333;
+ }
+ 
+ /* 🔹 중앙: 네비게이션 버튼 */
+ .nav-links {
+  display: flex;
+  gap: 20px;
+ }
+ 
+ .nav-button {
+  text-decoration: none;
+  font-size: 18px;
+  color: #007bff;
+  padding: 8px 12px;
+  transition: 0.3s;
+ }
+ 
+ .nav-button:hover {
+  color: #0056b3;
+ }
+ 
+ /* 🔹 오른쪽: 회원가입, 로그인 버튼 */
+ .auth-buttons {
+  display: flex;
+  gap: 15px;
+ }
+ 
+ .auth-button {
+  text-decoration: none;
+  font-size: 16px;
+  color: white;
+  background-color: #4caf50;
+  padding: 8px 14px;
+  border-radius: 5px;
+  transition: 0.3s;
+ }
+ 
+ .auth-button:hover {
+  background-color: #45a049;
+ }
+ 
+ /* 🔹 검색 바 스타일 */
+ .search-bar {
+  width: 80%;
+  max-width: 800px;
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: white;
+  border-radius: 25px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  margin-top: 80px; /* 네비게이션 바와 겹치지 않도록 */
+  margin-bottom: 20px;
+ }
+ 
+ .search-bar input {
+  flex: 1;
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 25px;
+  outline: none;
+ }
+ 
+ .search-bar button {
+  padding: 10px 20px;
+  border: none;
+  background-color: #4caf50;
+  color: white;
+  border-radius: 25px;
+  cursor: pointer;
+  font-size: 16px;
+ }
+ 
+ .search-bar button:hover {
+  background-color: #45a049;
+ }
+ 
+ /* 🔹 3x3 추천어 루빅스 큐브 */
+ .recommend-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  gap: 10px;
+  width: 60%;
+  max-width: 600px;
+ }
+ 
+ .cube-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+  height: 120px;
+  text-align: center;
+  transition: transform 0.3s ease-in-out;
+ }
+ 
+ .cube-cell:hover {
+  transform: scale(1.05);
+ }
+ 
+ /* 🔹 반응형 처리 */
+ @media (max-width: 768px) {
+  .nav-links {
+    gap: 10px;
+  }
+  .auth-buttons {
+    gap: 10px;
+  }
+  .recommend-grid {
+    width: 90%;
+  }
+  .cube-cell {
+    height: 100px;
+  }
+ }
+ 

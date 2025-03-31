@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.suppleit.backend.mapper.ScheduleMapper">
+    <!-- ResultMap으로 ScheduleDto 매핑 정의 -->
+    <resultMap id="ScheduleResultMap" type="com.suppleit.backend.dto.ScheduleDto">
+        <id property="scheduleId" column="schedule_id" />
+        <result property="supplementName" column="supplement_name" />
+        <result property="intakeTime" column="intake_time" />
+        <result property="intakeStart" column="intake_start" />
+        <result property="intakeEnd" column="intake_end" />
+        <result property="intakeDistance" column="intake_distance" />
+        <result property="memo" column="memo" />
+        <result property="memberId" column="member_id" />
+    </resultMap>
+
+    <!-- 일정 추가 -->
+    <insert id="insertSchedule" useGeneratedKeys="true" keyProperty="scheduleId">
+        INSERT INTO schedule (
+            supplement_name, 
+            intake_time, 
+            intake_start, 
+            intake_end, 
+            intake_distance, 
+            memo, 
+            member_id
+        ) VALUES (
+            #{supplementName}, 
+            #{intakeTime}, 
+            #{intakeStart}, 
+            #{intakeEnd}, 
+            #{intakeDistance}, 
+            #{memo}, 
+            #{memberId}
+        )
+    </insert>
+    
+    <!-- 특정 일정 조회 -->
+    <select id="getScheduleById" resultMap="ScheduleResultMap">
+        SELECT * FROM schedule WHERE schedule_id = #{scheduleId}
+    </select>
+
+    <!-- 회원별 일정 조회 -->
+    <select id="getSchedulesByMemberId" resultMap="ScheduleResultMap">
+        SELECT * FROM schedule 
+        WHERE member_id = #{memberId}
+        ORDER BY intake_start DESC, intake_time ASC
+    </select>
+
+    <!-- 회원별, 시간대별 일정 조회 -->
+    <select id="getSchedulesByMemberIdAndTime" resultMap="ScheduleResultMap">
+        SELECT * FROM schedule 
+        WHERE member_id = #{memberId} AND intake_time = #{intakeTime}
+        ORDER BY intake_start DESC
+    </select>
+
+    <!-- 일정 수정 -->
+    <update id="updateSchedule">
+        UPDATE schedule SET
+            supplement_name = #{supplementName},
+            intake_time = #{intakeTime},
+            intake_start = #{intakeStart},
+            intake_end = #{intakeEnd},
+            intake_distance = #{intakeDistance},
+            memo = #{memo}
+        WHERE schedule_id = #{scheduleId}
+    </update>
+
+    <!-- 일정 삭제 -->
+    <delete id="deleteSchedule">
+        DELETE FROM schedule WHERE schedule_id = #{scheduleId}
+    </delete>
+</mapper>

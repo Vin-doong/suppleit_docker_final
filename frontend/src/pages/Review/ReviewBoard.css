@@ -1,0 +1,142 @@
+.review-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: flex-start;  
+    min-height: 100vh;
+    padding-top: 10px; 
+  }
+  
+  /* 카드 */
+  .review-card {
+    width: 75%;
+    margin-top: 20px;
+    min-height: 700px;
+    padding: 30px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    background: white;
+  }
+  
+  /* 제목 */
+  .review-title {
+    font-size: 30px;
+    font-weight: bold;
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  
+  /* 검색창 */
+  .review-search {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .review-search input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  .search-button {
+    width: 100px;
+    border-radius: 5px;
+    background-color: #14B8A6;
+    color: white;
+    border: none;
+    transition: background 0.3s;
+  }
+  
+  .search-button:hover {
+    background-color: #0d9488;
+  }
+  
+  /* 테이블 */
+  .review-table-container {
+    flex-grow: 1;
+  }
+  
+  .review-table {
+    width: 100%;
+    background: white;
+    border-collapse: collapse;
+  }
+  
+  .review-table th, 
+  .review-table td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: center;
+  }
+  
+  .review-table th {
+    background-color: #9adbd4;
+    font-weight: bold;
+  }
+  
+  /* 제목 링크 스타일 */
+  .review-title-link {
+    cursor: pointer;
+    color: black;
+    font-weight: bold;
+    text-decoration: none;
+  }
+  
+  .review-title-link:hover {
+    color: #0d9488;
+    text-decoration: underline;
+  }
+  
+  /* 글쓰기 버튼 */
+  .review-button-container {
+    display: flex;
+    justify-content: flex-end;  /* ✅ 버튼을 오른쪽 정렬 */
+    margin-top: auto;  /* ✅ 자동으로 하단 정렬 */
+  }
+  
+  .review-write-button {
+    background-color: #14B8A6;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 20px;
+    border: none;
+    transition: background 0.3s;
+  }
+  
+  .review-write-button:hover {
+    background-color: #0d9488;
+  }
+  
+  /* 페이지네이션 스타일 */
+  .pagination .page-item {
+    margin: 0 3px; /* 버튼 간격을 조금 줄였습니다. */
+  }
+  
+  .pagination .page-link {
+    background-color: white;
+    border: 1px solid #0d9488;
+    color: #0d9488;
+    padding: 6px 12px; /* 크기 줄임 */
+    font-size: 0.875rem; /* 글씨 크기 줄임 */
+    text-align: center;
+  }
+  
+  .pagination .page-item.active .page-link {
+    background-color: #0d9488;
+    color: white;
+    border: 1px solid #0d9488;
+  }
+  
+  .pagination .page-link:hover {
+    background-color: #0d9488;
+    color: white;
+  }
+  
+  .pagination .page-item.disabled .page-link {
+    background-color: #f8f9fa;
+    color: #ccc;
+    border: 1px solid #f8f9fa;
+  }
+  

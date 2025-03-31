@@ -1,0 +1,141 @@
+html, body {
+  height: 100vh;  /* ✅ 전체 높이 제한 */
+  margin: 0;
+  padding: 0;
+}
+
+.signup-page {
+  background-color: #E0F2F1; /* 연한 민트 */
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 50px;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+/* 중앙 정렬을 위한 컨테이너 */
+.signup-container {
+  max-width: 900px;
+  width: 90%;
+}
+
+/* 카드 스타일 */
+.signup-card {
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  padding: 30px;
+  background: white;
+}
+
+/* 제목 스타일 */
+.signup-page h2 {
+  color: #2A9D8F;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+/* 폼 요소 스타일 */
+.signup-form-label {
+  font-weight: 600;
+}
+
+/* 입력 필드 */
+.signup-form-control {
+  border-radius: 5px;
+  padding: 10px;
+  font-size: 14px;
+  opacity: 1;
+  background: #FFFFFF;
+  box-sizing: border-box;
+  border: 1px solid #B2D8D8;
+}
+
+.signup-form-control:focus {
+  border-color: #2A9D8F;
+  box-shadow: 0 0 5px  #2A9D8F;
+}
+
+
+.gender-button-group {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+}
+
+.gender-button {
+  flex: 1;
+  padding: 10px;
+  font-size: 14px;
+  font-weight: bold;
+  border-radius: 8px;
+  border: 1px solid #d6d6d6 !important;
+  color: #333 !important;
+  background-color: white !important;
+  transition: all 0.3s ease-in-out;
+}
+
+.gender-button.isActive { 
+  background-color: #2A9D8F !important; 
+  color: white !important;
+  border-color: rgb(15, 105, 95) !important;
+}
+
+.gender-button:hover {
+  background-color: rgb(210, 241, 238) !important;
+  border-color: #2A9D8F !important;
+}
+
+/* 버튼 스타일 */
+.signup-btn-primary {
+  background: #2A9D8F;
+  border: none;
+  padding: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  width: 100%;
+  border-radius: 5px;
+}
+
+.signup-btn-primary:hover {
+  background-color: #2A9D8F;
+}
+
+/* 약관 동의 체크박스 */
+.signup-form-check-label {
+  font-size: 14px;
+  color: #666;
+}
+
+.signup-form-check-label a {
+  color:  #2A9D8F;
+  text-decoration: none;
+}
+
+/* 푸터 텍스트 */
+.signup-footer-text {
+  text-align: center;
+  margin-top: 15px;
+  font-size: 14px;
+}
+
+.signup-footer-text a {
+  color:  #2A9D8F;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+/* 반응형 디자인 (태블릿 & 모바일 대응) */
+@media (max-width: 768px) {
+  .signup-container {
+    max-width: 600px;
+  }
+}
+
+@media (max-width: 480px) {
+  .signup-container {
+    max-width: 90%;
+  }
+}

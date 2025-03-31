@@ -11,6 +11,7 @@ public class Review {
     private Long memberId;
     private Long prdId;
     private String authorEmail;
+    private String authorNickname;
     private String title;
     private String content;
     private String productName;

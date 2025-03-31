@@ -144,10 +144,10 @@ export const changePassword = async (oldPassword, newPassword) => {
 };
 
 // 회원 탈퇴 API
-export const deleteMember = async () => {
-  return api.delete("/member/delete");
+export const deleteMember = async (password) => {
+  const data = password ? { password } : {};
+  return api.delete("/member/delete", { data });
 };
-
 export const checkEmail = async (email) => {
   return api.get(`/member/validation/email/${email}`);
 };

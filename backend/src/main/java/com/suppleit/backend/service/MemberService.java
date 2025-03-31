@@ -166,6 +166,21 @@ public class MemberService {
         memberMapper.deleteMemberByEmail(email);
         log.info("회원 탈퇴 완료: {}", email);
     }
+    // 비밀번호 검증 메소드 추가
+    public boolean validatePassword(String email, String rawPassword) {
+        Member member = memberMapper.getMemberByEmail(email);
+        
+        if (member == null) {
+            throw new IllegalArgumentException("사용자를 찾을 수 없습니다.");
+        }
+        
+        // 소셜 계정인 경우 항상 검증 실패
+        if (member.getSocialType() != SocialType.NONE) {
+            throw new IllegalArgumentException("소셜 로그인 계정은 비밀번호 검증이 필요하지 않습니다.");
+        }
+        
+        return passwordEncoder.matches(rawPassword, member.getPassword());
+    }
     
     // 이메일로 회원 역할 조회
     public String getMemberRoleByEmail(String email) {

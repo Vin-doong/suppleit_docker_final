@@ -21,11 +21,14 @@ const ReviewDetail = () => {
         const response = await getReviewById(id);
         setReview(response.data);
         setLoading(false);
-
+  
         const currentUserEmail = localStorage.getItem("email")?.trim();
         const reviewAuthorEmail = response.data.authorEmail?.trim();
-
-        if (reviewAuthorEmail?.toLowerCase() === currentUserEmail?.toLowerCase()) {
+        const userRole = localStorage.getItem("role");
+        const isAdmin = userRole === "ADMIN";
+  
+        // 작성자이거나 관리자인 경우 수정/삭제 권한 부여
+        if ((reviewAuthorEmail?.toLowerCase() === currentUserEmail?.toLowerCase()) || isAdmin) {
           setCanEdit(true);
           setCanDelete(true);
         }
@@ -34,7 +37,7 @@ const ReviewDetail = () => {
         setLoading(false);
       }
     };
-
+  
     if (id) {
       fetchReview();
     } else {
@@ -86,7 +89,10 @@ const ReviewDetail = () => {
           {review.rating > 0 && renderStars(review.rating)}
 
           <p className="text-muted mt-2">
-            <strong>작성자:</strong> {review.authorEmail || "알 수 없음"} |
+          <strong>작성자:</strong> {
+            review.authorNickname ? review.authorNickname : 
+            (review.authorEmail ? review.authorEmail.split('@')[0] : "알 수 없음")
+          } |
             <strong> 작성일:</strong> {review.createdAt ? new Date(review.createdAt).toLocaleDateString() : "날짜 없음"}
           </p>
           <hr />

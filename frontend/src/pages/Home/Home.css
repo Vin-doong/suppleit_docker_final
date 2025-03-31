@@ -82,35 +82,35 @@
  
  /* 🔹 검색 바 스타일 */
  .search-bar {
-  width: 80%;
-  max-width: 800px;
+  width: 85%;
+  max-width: 900px;
   display: flex;
   justify-content: space-between;
-  padding: 10px;
+  padding: 12px;
   background-color: white;
-  border-radius: 25px;
+  border-radius: 30px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  margin-top: 80px; /* 네비게이션 바와 겹치지 않도록 */
-  margin-bottom: 20px;
+  margin-top: 90px;
+  margin-bottom: 25px;
  }
  
  .search-bar input {
   flex: 1;
   border: none;
-  padding: 10px;
-  font-size: 16px;
-  border-radius: 25px;
+  padding: 12px;
+  font-size: 18px;
+  border-radius: 30px;
   outline: none;
  }
  
  .search-bar button {
-  padding: 10px 20px;
+  padding: 12px 24px;
   border: none;
   background-color: #4caf50;
   color: white;
-  border-radius: 25px;
+  border-radius: 30px;
   cursor: pointer;
-  font-size: 16px;
+  font-size: 18px;
  }
  
  .search-bar button:hover {
@@ -122,9 +122,10 @@
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(3, 1fr);
-  gap: 10px;
-  width: 60%;
-  max-width: 600px;
+  gap: 15px; /* 간격을 좀 더 넓힘 */
+  width: 70%; /* 그리드 너비를 여유롭게 설정 */
+  max-width: 750px; /* 최대 너비도 넉넉히 설정 */
+  margin: 0 auto; /* 가운데 정렬 */
  }
  
  .cube-cell {
@@ -133,10 +134,10 @@
   align-items: center;
   justify-content: center;
   background-color: white;
-  padding: 20px;
+  padding: 30px; /* 박스 내부 여백을 넉넉히 설정 */
   border-radius: 10px;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
-  height: 120px;
+  height: 140px; /* 박스 높이도 여유롭게 설정 */
   text-align: center;
   transition: transform 0.3s ease-in-out;
  }
@@ -147,17 +148,11 @@
  
  /* 🔹 반응형 처리 */
  @media (max-width: 768px) {
-  .nav-links {
-    gap: 10px;
-  }
-  .auth-buttons {
-    gap: 10px;
-  }
   .recommend-grid {
-    width: 90%;
+    width: 90%; /* 모바일에서 그리드 너비를 90%로 설정 */
   }
   .cube-cell {
-    height: 100px;
+    height: 120px; /* 모바일에서 박스 높이를 줄임 */
   }
  }
  

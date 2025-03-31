@@ -4,6 +4,8 @@ import com.suppleit.backend.dto.ReviewDto;
 import com.suppleit.backend.model.Product;
 import com.suppleit.backend.service.ReviewService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/reviews")
 @RequiredArgsConstructor
@@ -21,6 +24,10 @@ public class ReviewController {
     @GetMapping
     public ResponseEntity<List<ReviewDto>> getAllReviews() {
         List<ReviewDto> reviews = reviewService.getAllReviews();
+        for (ReviewDto review : reviews) {
+            log.info("리뷰: {}, 작성자 이메일: {}, 닉네임: {}", 
+                review.getTitle(), review.getAuthorEmail(), review.getAuthorNickname());
+        }
         return ResponseEntity.ok(reviews);
     }
 

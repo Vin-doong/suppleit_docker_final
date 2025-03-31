@@ -16,6 +16,7 @@ public class ReviewDto {
     private Long reviewId;
     private Long memberId;
     private String authorEmail;
+    private String authorNickname;
 
     private Long prdId;
 
@@ -43,6 +44,7 @@ public class ReviewDto {
         dto.setReviewId(review.getReviewId());
         dto.setMemberId(review.getMemberId());
         dto.setAuthorEmail(review.getAuthorEmail());
+        dto.setAuthorNickname(review.getAuthorNickname());
         dto.setTitle(review.getTitle());
         dto.setContent(review.getContent());
         dto.setProductName(review.getProductName());

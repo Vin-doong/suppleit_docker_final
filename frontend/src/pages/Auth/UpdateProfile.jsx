@@ -1,9 +1,10 @@
-// src/pages/Auth/UpdateProfile.jsx (전체 코드)
-
+// src/pages/Auth/UpdateProfile.jsx (비밀번호 변경 부분)
 import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Form, Button, Container, Card, ButtonGroup, ToggleButton, Alert } from "react-bootstrap";
+import { Form, Button, Container, Card, ButtonGroup, ToggleButton, Alert, Modal } from "react-bootstrap";
 import { getMemberInfo, updateMemberInfo, checkNickname, deleteMember, changePassword, checkAccountType } from '../../services/api';
+import PasswordValidation from '../../components/PasswordValidation';
+import PasswordMatchIndicator from '../../components/PasswordMatchIndicator';
 import "../Auth/Signup.css";
 import Header from "../../components/include/Header";
 import Footer from "../../components/include/Footer";
@@ -48,6 +49,11 @@ const UpdateProfile = () => {
     passwordChecked: false,
     passwordMatch: false
   });
+
+  // 새로운 상태 추가
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [deletePassword, setDeletePassword] = useState('');
+  const [deleteError, setDeleteError] = useState('');
   
   // 현재 날짜 계산 (생년월일 최대값으로 사용)
   const today = new Date().toISOString().split('T')[0];
@@ -239,6 +245,7 @@ const UpdateProfile = () => {
       });
     }
   };
+  
   // 생년월일 유효성 검사 상태 추가
   const [birthdateError, setBirthdateError] = useState("");
 
@@ -271,34 +278,52 @@ const UpdateProfile = () => {
     }
   };
 
-  // 회원 탈퇴 처리 함수
-  const handleDeleteAccount = async () => {
+  // 회원 탈퇴 처리 함수 수정
+  const handleShowDeleteModal = () => {
     // 소셜 계정과 로컬 계정에 따라 다른 확인 메시지 표시
     const message = isSocialAccount
       ? `${getSocialTypeName(socialType)} 계정 연동이 해제되고 회원정보가 삭제됩니다. 계속하시겠습니까?`
       : "회원 탈퇴 시 모든 정보가 삭제되며 복구할 수 없습니다. 정말로 탈퇴하시겠습니까?";
 
     if (window.confirm(message)) {
-      try {
-        // 회원 탈퇴 API 호출
-        await deleteMember();
-        
-        // 로컬 스토리지의 인증 정보 삭제 (로그아웃)
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("role");
-        localStorage.removeItem('email');
-        localStorage.removeItem('memberId');
-        
-        alert("회원 탈퇴가 완료되었습니다.");
-        
+      // 소셜 계정이면 바로 탈퇴 진행, 로컬 계정은 비밀번호 확인 모달 표시
+      if (isSocialAccount) {
+        handleDeleteAccount();
+      } else {
+        setShowDeleteModal(true);
+      }
+    }
+  };
+
+  const handleDeleteAccount = async () => {
+    try {
+      setIsSubmitting(true);
+      setDeleteError('');
+      
+      // 회원 탈퇴 API 호출 (비밀번호 포함)
+      const response = await deleteMember(isSocialAccount ? null : deletePassword);
+      
+      // 로컬 스토리지의 인증 정보 삭제 (로그아웃)
+      localStorage.removeItem("accessToken");
+      localStorage.removeItem("refreshToken");
+      localStorage.removeItem("role");
+      localStorage.removeItem('email');
+      localStorage.removeItem('memberId');
+      
+      Swal.fire({
+        title: '탈퇴 완료',
+        text: "회원 탈퇴가 완료되었습니다.",
+        icon: 'success',
+        confirmButtonColor: '#2A9D8F'
+      }).then(() => {
         // 로그인 페이지로 이동
         navigate("/login");
-      } catch (error) {
-        console.error("회원 탈퇴 오류:", error);
-        alert("회원 탈퇴 중 오류가 발생했습니다: " + 
-              (error.response?.data?.message || error.message));
-      }
+      });
+    } catch (error) {
+      console.error("회원 탈퇴 오류:", error);
+      setDeleteError(error.response?.data?.message || "회원 탈퇴 중 오류가 발생했습니다.");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -327,12 +352,22 @@ const UpdateProfile = () => {
     // 모든 비밀번호 필드가 채워진 경우 비밀번호 변경 로직 실행
     if (oldPassword && newPassword && confirmPassword) {
       if (newPassword !== confirmPassword) {
-        alert('새 비밀번호와 확인 비밀번호가 일치하지 않습니다.');
+        Swal.fire({
+          title: '비밀번호 불일치',
+          text: '새 비밀번호와 확인 비밀번호가 일치하지 않습니다.',
+          icon: 'error',
+          confirmButtonColor: '#2A9D8F'
+        });
         return;
       }
       
       if (!validatePassword(newPassword)) {
-        alert('비밀번호는 8자 이상이며, 숫자와 특수문자를 포함해야 합니다.');
+        Swal.fire({
+          title: '비밀번호 형식 오류',
+          text: '비밀번호는 8자 이상이며, 숫자와 특수문자를 포함해야 합니다.',
+          icon: 'error',
+          confirmButtonColor: '#2A9D8F'
+        });
         return;
       }
       
@@ -340,14 +375,30 @@ const UpdateProfile = () => {
         // 비밀번호 변경 API 호출
         const passwordResponse = await changePassword(oldPassword, newPassword);
         if (!passwordResponse.data.success) {
-          alert(passwordResponse.data.message || '비밀번호 변경에 실패했습니다.');
+          Swal.fire({
+            title: '비밀번호 변경 실패',
+            text: passwordResponse.data.message || '비밀번호 변경에 실패했습니다.',
+            icon: 'error',
+            confirmButtonColor: '#2A9D8F'
+          });
           return;
         }
         setPasswordSuccess(true);
+        Swal.fire({
+          title: '비밀번호 변경 성공',
+          text: '비밀번호가 성공적으로 변경되었습니다.',
+          icon: 'success',
+          confirmButtonColor: '#2A9D8F'
+        });
       } catch (error) {
         console.error('비밀번호 변경 오류:', error);
-        alert('비밀번호 변경 중 오류가 발생했습니다: ' + 
-              (error.response?.data?.message || error.message));
+        Swal.fire({
+          title: '비밀번호 변경 실패',
+          text: '비밀번호 변경 중 오류가 발생했습니다: ' + 
+               (error.response?.data?.message || error.message),
+          icon: 'error',
+          confirmButtonColor: '#2A9D8F'
+        });
         return;
       }
     }
@@ -355,7 +406,12 @@ const UpdateProfile = () => {
     // 비밀번호 필드가 일부만 채워진 경우 경고
     if ((oldPassword && !newPassword) || (!oldPassword && newPassword) || 
         (newPassword && !confirmPassword) || (!newPassword && confirmPassword)) {
-      alert('비밀번호를 변경하려면 현재 비밀번호, 새 비밀번호, 비밀번호 확인을 모두 입력해주세요.');
+      Swal.fire({
+        title: '입력 필요',
+        text: '비밀번호를 변경하려면 현재 비밀번호, 새 비밀번호, 비밀번호 확인을 모두 입력해주세요.',
+        icon: 'warning',
+        confirmButtonColor: '#2A9D8F'
+      });
       return;
     }
 
@@ -630,11 +686,9 @@ const UpdateProfile = () => {
                         <i className={`fas ${showNewPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
                       </button>
                     </div>
-                    <Form.Text className={validation.passwordChecked ? "text-success" : "text-muted"}>
-                      {validation.passwordChecked 
-                        ? "✅ 비밀번호가 유효합니다." 
-                        : "비밀번호는 8자 이상, 숫자와 특수문자를 포함해야 합니다."}
-                    </Form.Text>
+                    
+                    {/* 비밀번호 유효성 검사 표시 컴포넌트 */}
+                    <PasswordValidation password={newPassword} />
                   </Form.Group>
                   
                   {/* 새 비밀번호 확인 필드 */}
@@ -657,13 +711,13 @@ const UpdateProfile = () => {
                         <i className={`fas ${showConfirmPassword ? 'fa-eye-slash' : 'fa-eye'}`}></i>
                       </button>
                     </div>
-                    {confirmPassword && (
-                      <Form.Text className={validation.passwordMatch ? "text-success" : "text-danger"}>
-                        {validation.passwordMatch 
-                          ? "✅ 비밀번호가 일치합니다." 
-                          : "❌ 비밀번호가 일치하지 않습니다."}
-                      </Form.Text>
-                    )}
+                    
+                    {/* 비밀번호 일치 여부 표시 컴포넌트 */}
+                    <PasswordMatchIndicator 
+                      password={newPassword} 
+                      confirmPassword={confirmPassword} 
+                    />
+                    
                     <Form.Text className="text-muted mt-2 d-block">
                       비밀번호를 변경하지 않으려면 비워두세요.
                     </Form.Text>
@@ -691,7 +745,7 @@ const UpdateProfile = () => {
                 
                 <Button 
                   variant="danger" 
-                  onClick={handleDeleteAccount}
+                  onClick={handleShowDeleteModal} // handleDeleteAccount에서 handleShowDeleteModal로 변경
                   style={{ 
                     width: "45%", 
                     backgroundColor: '#e63946', 
@@ -710,8 +764,39 @@ const UpdateProfile = () => {
         </Card>
       </Container>
       <Footer />
+      <Modal show={showDeleteModal} onHide={() => setShowDeleteModal(false)}>
+        <Modal.Header closeButton>
+          <Modal.Title>회원 탈퇴 확인</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <p className="mb-3">회원 탈퇴를 진행하려면 현재 비밀번호를 입력해주세요.</p>
+          {deleteError && <Alert variant="danger">{deleteError}</Alert>}
+          <Form.Group>
+            <Form.Label>현재 비밀번호</Form.Label>
+            <Form.Control 
+              type="password" 
+              value={deletePassword} 
+              onChange={(e) => setDeletePassword(e.target.value)}
+              placeholder="현재 비밀번호 입력"
+            />
+          </Form.Group>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={() => setShowDeleteModal(false)}>
+            취소
+          </Button>
+          <Button 
+            variant="danger" 
+            onClick={handleDeleteAccount}
+            disabled={isSubmitting || !deletePassword}
+          >
+            {isSubmitting ? "처리 중..." : "탈퇴하기"}
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </>
   );
 };
+
 
 export default UpdateProfile;

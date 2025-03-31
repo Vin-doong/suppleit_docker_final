@@ -34,7 +34,11 @@ const ReviewBoard = () => {
       try {
         setLoading(true);
         const response = await getReviews();
-        console.log("리뷰 API 응답:", response.data);
+        console.log("API 응답 데이터:", response.data);
+        // 닉네임이 있는지 확인
+        response.data.forEach(review => {
+          console.log(`리뷰 ID: ${review.reviewId}, 제목: ${review.title}, 이메일: ${review.authorEmail}, 닉네임: ${review.authorNickname}`);
+        });
         setReviews(response.data);
         setLoading(false);
       } catch (error) {
@@ -167,7 +171,8 @@ const ReviewBoard = () => {
                         >[{review.productName}]
                           {review.title}
                         </td>
-                        <td>{review.authorEmail}</td>
+                        <td>{review.authorNickname ? review.authorNickname : 
+                          (review.authorEmail ? review.authorEmail.split('@')[0] : "Unknown")}</td> {/* 닉네임이 있으면 닉네임 표시, 없으면 이메일 표시 */}
                         <td>{review.views || 0}</td>
                         <td>{formatDate(review.createdAt)}</td>
                       </tr>

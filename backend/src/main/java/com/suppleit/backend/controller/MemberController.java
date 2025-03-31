@@ -80,13 +80,35 @@ public class MemberController extends JwtSupportController {
 
     // 회원 탈퇴 (로그인한 사용자만 자신의 계정 삭제 가능)
     @DeleteMapping("/delete")
-    public ResponseEntity<Map<String, Object>> deleteMember(HttpServletRequest req) {
+    public ResponseEntity<Map<String, Object>> deleteMember(
+            @RequestBody Map<String, String> request, 
+            HttpServletRequest req) {
         try {
             String email = extractEmailFromToken(req);
+            
+            // 비밀번호 검증 추가
+            String password = request.get("password");
+            if (password == null || password.isEmpty()) {
+                return ResponseEntity.badRequest().body(Map.of(
+                    "success", false,
+                    "message", "비밀번호를 입력해주세요."
+                ));
+            }
             
             // 계정 유형 확인 (소셜 계정 여부)
             boolean isSocialAccount = memberService.isSocialAccount(email);
             String socialType = isSocialAccount ? memberService.getSocialType(email) : "NONE";
+            
+            // 소셜 계정이 아닌 경우 비밀번호 검증
+            if (!isSocialAccount) {
+                boolean isPasswordValid = memberService.validatePassword(email, password);
+                if (!isPasswordValid) {
+                    return ResponseEntity.badRequest().body(Map.of(
+                        "success", false,
+                        "message", "비밀번호가 일치하지 않습니다."
+                    ));
+                }
+            }
             
             // 회원 탈퇴 처리
             memberService.deleteMemberByEmail(email);

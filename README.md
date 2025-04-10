@@ -107,17 +107,3 @@ suppleit/
 ├── db/                  # 데이터베이스 스크립트
 └── docker-compose.yml   # Docker 설정
 ```
-
-## 기여 방법
-1. 프로젝트 포크
-2. 새 브랜치 생성 (`git checkout -b feature/amazing-feature`)
-3. 변경사항 커밋 (`git commit -m 'Add some amazing feature'`)
-4. 브랜치에 푸시 (`git push origin feature/amazing-feature`)
-5. Pull Request 제출
-
-## 라이선스
-이 프로젝트는 Apache 2.0 라이선스를 따릅니다.
-
-## 연락처
-- Email: support@suppleit.com
-- Website: https://suppleit.com
